@@ -1,0 +1,48 @@
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+
+const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQHnWWwz0rmowlspxnq8PDUZRBFDOty5UPQLayxtABYl3VO1OsosT9hp8XO9QtIFxit7ZQk92C5HN7N/pub?output=csv";
+function parseCSVLine(text){
+  const rows=[]; const lines=text.split(/\r?\n/).filter(Boolean);
+  for(const line of lines){
+    let cur=''; let inQ=false; const r=[];
+    for(let ch of line){
+      if(ch=='"'){ inQ=!inQ; continue; }
+      if(ch==',' && !inQ){ r.push(cur.trim()); cur=''; } else cur+=ch;
+    }
+    r.push(cur.trim()); rows.push(r);
+  }
+  return rows;
+}
+
+export default function ProductDetail(){
+  const { id } = useParams();
+  const [product, setProduct] = useState(null);
+
+  useEffect(()=>{
+    fetch(SHEET_CSV_URL).then(r=>r.text()).then(txt=>{
+      const rows = parseCSVLine(txt);
+      const header = rows[0].map(h=>h.toLowerCase());
+      const data = rows.slice(1).map(r=> {
+        const obj={}; header.forEach((h,i)=>obj[h]=r[i]||''); return obj;
+      }).filter(p=>p.name);
+      const item = data[Number(id)];
+      setProduct(item);
+    }).catch(err=>console.error(err))
+  },[id]);
+
+  if(!product) return <div>Loading...</div>;
+
+  const wa = product.whatsapp || '+919521787139';
+  const waLink = `https://wa.me/${wa.replace(/\D/g,'')}?text=${encodeURIComponent('I want to order '+product.name+' (₹'+product.price+')')}`;
+
+  return (
+    <div>
+      <h3>{product.name}</h3>
+      <img src={product.image_url || product.image} style={{width:'100%',borderRadius:10}} alt={product.name} />
+      <p style={{fontWeight:700}}>₹ {product.price}</p>
+      <p>{product.description}</p>
+      <a className="btn" href={waLink} target="_blank" rel="noreferrer">Order on WhatsApp</a>
+    </div>
+  );
+}
