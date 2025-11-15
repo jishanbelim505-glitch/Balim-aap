@@ -1,0 +1,15 @@
+:root{
+  --ion-color-primary: #d62828;
+  --ion-color-secondary: #fcbf49;
+  --ion-background-color: #fffaf3;
+}
+html,body,#root { height:100%; margin:0; font-family: Inter, Roboto, Arial, sans-serif; background:var(--ion-background-color); }
+.app-header { background: linear-gradient(90deg,#d62828,#b32424); color:#fff; padding:14px 16px; text-align:center; font-weight:700;}
+.container { padding:12px; }
+.search { width:100%; padding:10px; border-radius:10px; border:1px solid #ddd; margin-bottom:12px; }
+.grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(170px,1fr)); gap:12px; }
+.card { background:#fff; border-radius:12px; box-shadow:0 6px 16px rgba(0,0,0,0.06); overflow:hidden; }
+.card img { width:100%; height:130px; object-fit:cover; display:block; }
+.card .body { padding:10px; }
+.price { color:var(--ion-color-primary); font-weight:700; margin-top:6px; }
+.btn { background:var(--ion-color-primary); color:#fff; padding:8px 10px; border-radius:8px; text-align:center; display:inline-block; text-decoration:none; }
