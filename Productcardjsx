@@ -1,0 +1,27 @@
+import React from "react";
+
+export default function ProductCard({ product, index, whatsapp }){
+  const img = product.image_url || product.image || 'https://via.placeholder.com/400x300?text=No+Image';
+  const name = product.name;
+  const price = product.price;
+  const desc = product.description || '';
+
+  const waLink = `https://wa.me/${(whatsapp||'').replace(/\D/g,'')}?text=${encodeURIComponent(`Hi, I want to order ${name} (₹${price}).`)}`;
+
+  return (
+    <div className="card">
+      <img src={img} alt={name} onError={(e)=>e.target.src='https://via.placeholder.com/400x300?text=No+Image'} />
+      <div className="body">
+        <div style={{minHeight:44}}>
+          <h4 style={{margin:0}}>{name}</h4>
+          <div style={{fontSize:12,color:'#666'}}>{desc}</div>
+        </div>
+        <div className="price">₹ {price}</div>
+        <div style={{display:'flex',gap:8,marginTop:8}}>
+          <a className="btn" href={waLink} target="_blank" rel="noreferrer">Order on WhatsApp</a>
+          <a className="btn" style={{background:'#fcbf49', color:'#000'}} href={`/product/${index}`}>Details</a>
+        </div>
+      </div>
+    </div>
+  );
+}
